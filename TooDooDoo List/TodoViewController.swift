@@ -12,6 +12,8 @@ class TodoViewController: UITableViewController {
     
     var doArray = ["Task1", "Task2", "Task3"]
     
+    let defaults = UserDefaults()
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return doArray.count
     }
@@ -36,10 +38,7 @@ class TodoViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
+   
     
     @IBAction func addTaskButton(_ sender: UIBarButtonItem) {
         
@@ -50,6 +49,7 @@ class TodoViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Task", style: .default) { (action) in
            
             self.doArray.append(textField.text!)
+            self.defaults.set(self.doArray, forKey: "ListArray")
             self.tableView.reloadData()
         }
         
@@ -68,7 +68,13 @@ class TodoViewController: UITableViewController {
     
     
     
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if let items = defaults.array(forKey: "ListArray") as? [String] {
+            doArray = items
+        }
+        
+    }
 }
 
 
