@@ -1,5 +1,5 @@
 //
-//  CtegoryViewController.swift
+//  CategoryViewController.swift
 //  TooDooDoo List
 //
 //  Created by Timofei Sopin on 2018-02-18.
@@ -7,24 +7,24 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
-class CtegoryViewController: UITableViewController {
+class CategoryViewController: UITableViewController {
     
-    var categoryArray = [ListOfCategories]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm = try! Realm()
     
+    var categoryArray: Results<ListOfCategories>?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        self.navigationItem.rightBarButtonItem = self.editButtonItem
         loadCategories()
     }
     
     //MARK: TableView Datasource Method
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categoryArray?.count ?? 1
     }
     
     
@@ -32,8 +32,8 @@ class CtegoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let category = categoryArray[indexPath.row]
-        cell.textLabel?.text = category.name
+        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No Categories"
+      
         
         return cell
     }
@@ -52,23 +52,32 @@ class CtegoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]        }
+            destinationVC.selectedCategory = categoryArray?[indexPath.row]        }
         
     }
     
     
     //MARK: Add New Category Button
+    // Creating new Category Object
     @IBAction func addCategoryButton(_ sender: UIBarButtonItem) {
         
         
         var textField = UITextField()
         let alert = UIAlertController(title: "Add New Category", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
-            let newCategory  = ListOfCategories(context: self.context)
-            newCategory.name = textField.text!
             
-            self.categoryArray.append(newCategory)
-            self.saveCategory()
+            let newCategory  = ListOfCategories()
+            if textField.text?.count != 0 {
+                
+            newCategory.name = textField.text!
+            self.saveCategory(category: newCategory)
+                
+            } else {
+                
+                newCategory.name = "Noname Category"
+                self.saveCategory(category: newCategory)
+                
+            }
             
         }
         
@@ -85,10 +94,12 @@ class CtegoryViewController: UITableViewController {
     
     //MARK: Data Manipulation Methods
     // Save Items to CoreData
-    func saveCategory() {
+    func saveCategory(category: ListOfCategories ) {
         
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             fatalError("Some error")
         }
@@ -96,13 +107,12 @@ class CtegoryViewController: UITableViewController {
     }
     
     // Load Items from CoreData
-    func loadCategories(with request : NSFetchRequest<ListOfCategories> =  ListOfCategories.fetchRequest()) {
+
+    func loadCategories() {
         
-        do {
-            categoryArray =  try context.fetch(request)
-        } catch {
-            fatalError("Some error")
-        }
+        categoryArray = realm.objects(ListOfCategories.self)
+    
+    
         tableView.reloadData()
     }
     
