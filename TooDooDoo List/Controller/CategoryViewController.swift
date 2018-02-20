@@ -8,21 +8,25 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+
+class CategoryViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
     var categoryArray: Results<ListOfCategories>?
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCategories()
+        
+        tableView.separatorStyle = .none
     }
     
     //MARK: TableView Datasource Method
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categoryArray?.count ?? 1
     }
@@ -31,9 +35,12 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        
         cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No Categories"
-      
+        
+        cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].color ?? "D4FB79")
         
         return cell
     }
@@ -69,13 +76,16 @@ class CategoryViewController: UITableViewController {
             let newCategory  = ListOfCategories()
             if textField.text?.count != 0 {
                 
-            newCategory.name = textField.text!
-            self.saveCategory(category: newCategory)
+                newCategory.name = textField.text!
+                newCategory.color = UIColor.randomFlat.hexValue()
+                self.saveCategory(category: newCategory)
                 
             } else {
                 
                 newCategory.name = "Noname Category"
+                newCategory.color = UIColor.flatGray.hexValue()
                 self.saveCategory(category: newCategory)
+                
                 
             }
             
@@ -107,18 +117,31 @@ class CategoryViewController: UITableViewController {
     }
     
     // Load Items from CoreData
-
+    
     func loadCategories() {
         
         categoryArray = realm.objects(ListOfCategories.self)
-    
-    
+        
+        
         tableView.reloadData()
     }
     
+    //DELETE
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let categoryForDelete = self.categoryArray?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(categoryForDelete)
+                }
+            } catch {
+                print("Error")
+            }
+        }
+    }
+    
 }
-
-
 
 
 

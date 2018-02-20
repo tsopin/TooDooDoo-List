@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '83AFB02516065688B0C573B24045C433'
-               BlueprintName = 'Realm'
+               BlueprintIdentifier = '0C6F643A5726932B1A6E18946EDB74E6'
+               BlueprintName = 'SwipeCellKit'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'Realm.framework'>
+               BuildableName = 'SwipeCellKit.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

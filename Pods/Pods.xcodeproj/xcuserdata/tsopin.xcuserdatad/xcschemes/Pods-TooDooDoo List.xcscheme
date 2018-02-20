@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0920"
+   LastUpgradeVersion = "0700"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "99C8C633875846AD43F6A4A79301FDCF"
+               BlueprintIdentifier = "43B5F2B4AD93A1B421507C463C5EE196"
                BuildableName = "Pods_TooDooDoo_List.framework"
                BlueprintName = "Pods-TooDooDoo List"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -47,7 +47,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "99C8C633875846AD43F6A4A79301FDCF"
+            BlueprintIdentifier = "43B5F2B4AD93A1B421507C463C5EE196"
             BuildableName = "Pods_TooDooDoo_List.framework"
             BlueprintName = "Pods-TooDooDoo List"
             ReferencedContainer = "container:Pods.xcodeproj">
